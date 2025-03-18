@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class QuizQuestion6 extends StatefulWidget {
   const QuizQuestion6({Key? key}) : super(key: key);
@@ -12,6 +14,84 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
   final ConfettiController _confettiController = ConfettiController(
     duration: Duration(seconds: 2),
   );
+
+  // ------------------------------------------------------------------
+  // ADDED TRANSLATION VARIABLES AND FUNCTION
+  // ------------------------------------------------------------------
+  String selectedLanguage = "English";
+  final String translateApiUrl = "https://api.mymemory.translated.net/get";
+
+  // Text that will be translated
+  String titleText = "Match the Pairs!";
+  String instructionText = "Tap on an image and then on the correct answer";
+  String checkButtonText = "Check ✅";
+  String resetButtonText = "Reset 🔄";
+  String correctDialogTitle = "Correct! 🎉";
+  String wrongDialogTitle = "Try Again! ❌";
+  // Labels for the right side
+  String gasLabel = "Gas";
+  String solidLabel = "Solid";
+
+  // This function translates each of the strings above.
+  Future<void> translateText(String targetLanguageCode) async {
+    try {
+      // Map each variable name to its English default text
+      Map<String, String> textsToTranslate = {
+        "titleText": "Match the Pairs!",
+        "instructionText": "Tap on an image and then on the correct answer",
+        "checkButtonText": "Check ✅",
+        "resetButtonText": "Reset 🔄",
+        "correctDialogTitle": "Correct! 🎉",
+        "wrongDialogTitle": "Try Again! ❌",
+        "gasLabel": "Gas",
+        "solidLabel": "Solid",
+      };
+
+      // For each text, call the translation API and update state
+      for (String key in textsToTranslate.keys) {
+        final response = await http.get(
+          Uri.parse(
+            "$translateApiUrl?q=${Uri.encodeComponent(textsToTranslate[key]!)}&langpair=en|$targetLanguageCode",
+          ),
+        );
+        if (response.statusCode == 200) {
+          final translatedText =
+              jsonDecode(response.body)["responseData"]["translatedText"];
+          setState(() {
+            switch (key) {
+              case "titleText":
+                titleText = translatedText;
+                break;
+              case "instructionText":
+                instructionText = translatedText;
+                break;
+              case "checkButtonText":
+                checkButtonText = translatedText;
+                break;
+              case "resetButtonText":
+                resetButtonText = translatedText;
+                break;
+              case "correctDialogTitle":
+                correctDialogTitle = translatedText;
+                break;
+              case "wrongDialogTitle":
+                wrongDialogTitle = translatedText;
+                break;
+              case "gasLabel":
+                gasLabel = translatedText;
+                break;
+              case "solidLabel":
+                solidLabel = translatedText;
+                break;
+            }
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint("Translation Error: $e");
+    }
+  }
+  // ------------------------------------------------------------------
 
   Map<String, String> correctAnswers = {
     "WaterVapor": "Gas",
@@ -53,7 +133,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text(correct ? "Correct! 🎉" : "Try Again! ❌"),
+            title: Text(correct ? correctDialogTitle : wrongDialogTitle),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -91,10 +171,53 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
+      // ------------------------------------------------------------------
+      // ADDED DROPDOWN IN APPBAR ACTIONS
+      // ------------------------------------------------------------------
       appBar: AppBar(
-        title: const Text("Match the Pairs!"),
+        title: Text(titleText),
         backgroundColor: Colors.blue.shade400,
+        actions: [
+          DropdownButton<String>(
+            value: selectedLanguage,
+            dropdownColor: Colors.blue.shade300,
+            icon: const Icon(Icons.language, color: Colors.white),
+            style: const TextStyle(color: Colors.white),
+            underline: Container(height: 0),
+            items: const [
+              DropdownMenuItem(value: 'English', child: Text('English')),
+              DropdownMenuItem(value: 'Spanish', child: Text('Spanish')),
+              DropdownMenuItem(value: 'Afrikaans', child: Text('Afrikaans')),
+            ],
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  selectedLanguage = value;
+                });
+                if (value == "Spanish") {
+                  translateText("es");
+                } else if (value == "Afrikaans") {
+                  translateText("af");
+                } else {
+                  // Reset to English defaults
+                  setState(() {
+                    titleText = "Match the Pairs!";
+                    instructionText =
+                        "Tap on an image and then on the correct answer";
+                    checkButtonText = "Check ✅";
+                    resetButtonText = "Reset 🔄";
+                    correctDialogTitle = "Correct! 🎉";
+                    wrongDialogTitle = "Try Again! ❌";
+                    gasLabel = "Gas";
+                    solidLabel = "Solid";
+                  });
+                }
+              }
+            },
+          ),
+        ],
       ),
+      // ------------------------------------------------------------------
       body: Stack(
         children: [
           LayoutBuilder(
@@ -116,7 +239,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Tap on an image and then on the correct answer",
+                  instructionText,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 30),
@@ -194,7 +317,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              "Gas",
+                              gasLabel,
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -222,7 +345,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              "Solid",
+                              solidLabel,
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -248,7 +371,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                         ),
                       ),
                       child: Text(
-                        "Check ✅",
+                        checkButtonText,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
@@ -263,7 +386,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                         ),
                       ),
                       child: Text(
-                        "Reset 🔄",
+                        resetButtonText,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
