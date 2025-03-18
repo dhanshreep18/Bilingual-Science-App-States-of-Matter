@@ -260,7 +260,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const WaterVaporQuiz(),
+                              builder: (context) => WaterVaporQuiz(),
                             ),
                           );
                         },

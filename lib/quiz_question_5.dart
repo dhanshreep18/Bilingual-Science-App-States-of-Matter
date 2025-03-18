@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'quiz_question_6.dart';
 
 class WaterVaporQuiz extends StatefulWidget {
   const WaterVaporQuiz({super.key});
@@ -313,7 +314,12 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
             // Another "Next ➡️" button that does nothing
             ElevatedButton(
               onPressed: () {
-                // Do nothing for now
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const QuizQuestion6(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
