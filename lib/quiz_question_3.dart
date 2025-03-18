@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'dart:math';
-
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: IdentifyProcessScreen(),
-  ));
-}
+import 'quiz_question_4.dart'; // Import quiz_question_4 for navigation
 
 class IdentifyProcessScreen extends StatefulWidget {
+  const IdentifyProcessScreen({super.key});
+
   @override
   _IdentifyProcessScreenState createState() => _IdentifyProcessScreenState();
 }
@@ -58,6 +54,10 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        title: const Text("Identify the Process"),
+        backgroundColor: Colors.blue,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -97,8 +97,8 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
               const SizedBox(height: 20),
               if (showFeedback)
                 AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  padding: EdgeInsets.all(12),
+                  duration: const Duration(milliseconds: 500),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: feedbackColor,
                     borderRadius: BorderRadius.circular(10),
@@ -117,7 +117,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                       const SizedBox(width: 8),
                       Text(
                         feedbackMessage,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -125,8 +125,8 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: resetQuiz,
-                icon: Icon(Icons.refresh),
-                label: Text("Try Again"),
+                icon: const Icon(Icons.refresh),
+                label: const Text("Try Again"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
@@ -134,6 +134,18 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
+              const SizedBox(height: 20),
+              // Next button to navigate to quiz_question_4
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const QuizScreen()),
+                  );
+                },
+                child: const Text("Next ➡️"),
+              ),
+              const SizedBox(height: 20),
               ConfettiWidget(
                 confettiController: _confettiController,
                 blastDirection: pi / 2,
@@ -157,7 +169,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300, width: 2),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 4,
@@ -169,8 +181,8 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 30, color: isCorrect ? Colors.green : Colors.blue),
-            SizedBox(height: 5),
-            Text(text, style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
+            Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),

@@ -2,21 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'dart:math';
 
-void main() {
-  runApp(WaterCycleQuizApp());
-}
-
-class WaterCycleQuizApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: QuizScreen(),
-    );
-  }
-}
-
 class QuizScreen extends StatefulWidget {
+  const QuizScreen({super.key});
   @override
   _QuizScreenState createState() => _QuizScreenState();
 }
@@ -30,7 +17,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: Duration(seconds: 3));
+    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
   }
 
   @override
@@ -40,7 +27,7 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void checkAnswer(String answer) {
-    if (answer == 'evaporation') {
+    if (answer.toLowerCase() == 'evaporation') {
       setState(() {
         feedbackText = 'Correct! That\'s right!';
         feedbackColor = Colors.green;
@@ -52,7 +39,7 @@ class _QuizScreenState extends State<QuizScreen> {
         feedbackColor = Colors.red;
         buttonColor = Colors.red;
       });
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 3), () {
         setState(() {
           buttonColor = null;
         });
@@ -72,6 +59,10 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        title: const Text("Water Cycle Quiz"),
+        backgroundColor: Colors.blue,
+      ),
       body: Stack(
         children: [
           Center(
@@ -80,11 +71,11 @@ class _QuizScreenState extends State<QuizScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Identify the process',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     width: 300,
                     height: 200,
@@ -96,7 +87,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           color: Colors.grey.withOpacity(0.2),
                           spreadRadius: 5,
                           blurRadius: 7,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -108,7 +99,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
@@ -122,17 +113,17 @@ class _QuizScreenState extends State<QuizScreen> {
                       buildAnswerButton('Freezing', 'freezing'),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     feedbackText,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: feedbackColor),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: resetQuiz,
-                    child: Text('Next Question'),
+                    child: const Text('Next Question'),
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),
                   ),
                 ],
@@ -157,10 +148,10 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget buildAnswerButton(String text, String answer) {
     return ElevatedButton(
       onPressed: () => checkAnswer(answer),
-      child: Text(text, style: TextStyle(fontSize: 16)),
+      child: Text(text, style: const TextStyle(fontSize: 16)),
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        backgroundColor: buttonColor != null && answer != 'evaporation' ? buttonColor : Colors.blue,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        backgroundColor: buttonColor != null && answer.toLowerCase() != 'evaporation' ? buttonColor : Colors.blue,
       ),
     );
   }
