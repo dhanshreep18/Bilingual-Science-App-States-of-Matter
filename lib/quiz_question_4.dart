@@ -93,10 +93,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        'https://creatie.ai/ai/api/search-image?query=A%20beautiful%20and%20educational%20illustration%20showing%20the%20water%20cycle%20process,%20specifically%20focusing%20on%20evaporation.',
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.asset('assets/evaporation.jpg', fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(height: 20),

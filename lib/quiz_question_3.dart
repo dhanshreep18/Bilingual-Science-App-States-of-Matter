@@ -76,7 +76,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
               const SizedBox(height: 20),
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset('assets/evaporation.png', fit: BoxFit.cover),
+                child: Image.asset('assets/melting.jpg', fit: BoxFit.cover),
               ),
               const SizedBox(height: 20),
               Wrap(
