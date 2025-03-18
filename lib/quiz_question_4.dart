@@ -30,14 +30,14 @@ class _QuizScreenState extends State<QuizScreen> {
   void checkAnswer(String answer) {
     if (answer.toLowerCase() == 'evaporation') {
       setState(() {
-        feedbackText = "✅ Correct! That's right!";
+        feedbackText = "✅ Correct! You're on fire!";
         feedbackColor = Colors.green.shade100;
         buttonColor = null;
       });
       _confettiController.play();
     } else {
       setState(() {
-        feedbackText = "❌ Try again!";
+        feedbackText = "❌ Oops! Try again!";
         feedbackColor = Colors.red.shade100;
         buttonColor = Colors.red;
       });
@@ -60,84 +60,120 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        title: const Text("Water Cycle Quiz"),
-        backgroundColor: Colors.blue,
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const Text(
-                  'Identify the Process',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/evaporation.jpg',
-                    width: 300,
-                    height: 200,
-                    fit: BoxFit.cover,
+      // Fun gradient background
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.lightBlue, Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Water Cycle Challenge!',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Pacifico',
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.asset(
+                          'assets/evaporation.jpg',
+                          width: 300,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Which process is depicted?',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          answerButton('Evaporation', 'evaporation'),
+                          answerButton('Sublimation', 'sublimation'),
+                          answerButton('Condensation', 'condensation'),
+                          answerButton('Freezing', 'freezing'),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: feedbackColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          feedbackText,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton.icon(
+                        onPressed: resetQuiz,
+                        icon: const Icon(Icons.refresh),
+                        label: const Text("Try Again 🔄"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 24),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: [
-                    answerButton('Evaporation', 'evaporation'),
-                    answerButton('Sublimation', 'sublimation'),
-                    answerButton('Condensation', 'condensation'),
-                    answerButton('Freezing', 'freezing'),
-                  ],
+              ),
+              // Fun confetti effect at the top center
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirection: -pi / 2,
+                  emissionFrequency: 0.05,
+                  numberOfParticles: 30,
+                  gravity: 0.2,
                 ),
-                const SizedBox(height: 20),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 500),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: feedbackColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    feedbackText,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: resetQuiz,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text("Try Again 🔄"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-      // Confetti widget overlaid on top
-      floatingActionButton: ConfettiWidget(
-        confettiController: _confettiController,
-        blastDirection: -pi / 2,
-        emissionFrequency: 0.05,
-        numberOfParticles: 20,
-        gravity: 0.2,
+      appBar: AppBar(
+        title: const Text("Water Cycle Quiz"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
     );
   }
@@ -147,10 +183,10 @@ class _QuizScreenState extends State<QuizScreen> {
       onPressed: () => checkAnswer(answer),
       child: Text(text, style: const TextStyle(fontSize: 16)),
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         backgroundColor: buttonColor != null && answer.toLowerCase() != 'evaporation'
             ? buttonColor
-            : Colors.blue,
+            : Colors.blueAccent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

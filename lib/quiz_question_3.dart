@@ -140,16 +140,16 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                 },
                 child: const Text("Next ➡️"),
               ),
-              const SizedBox(height: 20),
-              ConfettiWidget(
-                confettiController: _confettiController,
-                blastDirection: pi / 2,
-                numberOfParticles: 20,
-                gravity: 0.1,
-              ),
             ],
           ),
         ),
+      ),
+      // Use floating confetti similar to question 4
+      floatingActionButton: ConfettiWidget(
+        confettiController: _confettiController,
+        blastDirection: pi / 2,
+        numberOfParticles: 20,
+        gravity: 0.1,
       ),
     );
   }
