@@ -58,98 +58,109 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
         title: const Text("Identify the Process"),
         backgroundColor: Colors.blue,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Identify the Process",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Pacifico',
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset('assets/melting.jpg', fit: BoxFit.cover),
-              ),
-              const SizedBox(height: 20),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: [
-                  answerButton("Condensation", Icons.water_drop, false),
-                  answerButton("Evaporation", Icons.waves, false),
-                  answerButton("Sublimation", Icons.science, false),
-                  answerButton("Melting", Icons.thermostat, true),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (showFeedback)
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 500),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: feedbackColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        feedbackMessage.contains("Correct")
-                            ? Icons.check_circle
-                            : Icons.error,
-                        color: feedbackMessage.contains("Correct")
-                            ? Colors.green
-                            : Colors.red,
+      // Wrap the body in a Stack to overlay the confetti effect
+      body: Stack(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Identify the Process",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Pacifico',
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        feedbackMessage,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset('assets/melting.jpg', fit: BoxFit.cover),
+                    ),
+                    const SizedBox(height: 20),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: [
+                        answerButton("Condensation", Icons.water_drop, false),
+                        answerButton("Evaporation", Icons.waves, false),
+                        answerButton("Sublimation", Icons.science, false),
+                        answerButton("Melting", Icons.thermostat, true),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (showFeedback)
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: feedbackColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              feedbackMessage.contains("Correct")
+                                  ? Icons.check_circle
+                                  : Icons.error,
+                              color: feedbackMessage.contains("Correct")
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              feedbackMessage,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: resetQuiz,
-                icon: const Icon(Icons.refresh),
-                label: const Text("Try Again"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: resetQuiz,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text("Try Again"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Next button to navigate to quiz_question_4
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const QuizScreen()),
+                        );
+                      },
+                      child: const Text("Next ➡️"),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-              // Next button to navigate to quiz_question_4
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const QuizScreen()),
-                  );
-                },
-                child: const Text("Next ➡️"),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-      // Use floating confetti similar to question 4
-      floatingActionButton: ConfettiWidget(
-        confettiController: _confettiController,
-        blastDirection: pi / 2,
-        numberOfParticles: 20,
-        gravity: 0.1,
+          // Confetti widget overlaid at the top center of the screen
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: pi / 2,
+              emissionFrequency: 0.05,
+              numberOfParticles: 20,
+              gravity: 0.1,
+            ),
+          ),
+        ],
       ),
     );
   }
