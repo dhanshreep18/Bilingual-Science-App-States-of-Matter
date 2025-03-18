@@ -248,7 +248,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          // You could navigate to a next question if available.
+                          // Navigation for next question can be added here if available.
                         },
                         child: Text(nextQuestionText),
                       ),
@@ -274,8 +274,7 @@ class _QuizScreenState extends State<QuizScreen> {
       ),
       appBar: AppBar(
         title: const Text("Water Cycle Quiz"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.blue, // Changed from transparent to blue
         actions: [
           DropdownButton<String>(
             value: selectedLanguage,
