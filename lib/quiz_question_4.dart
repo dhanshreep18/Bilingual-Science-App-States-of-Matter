@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'quiz_question_5.dart'; // Add this to import the new page
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -36,8 +37,9 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
   }
 
   @override
@@ -64,10 +66,13 @@ class _QuizScreenState extends State<QuizScreen> {
 
       for (String key in textsToTranslate.keys) {
         final response = await http.get(
-          Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(textsToTranslate[key]!)}&langpair=en|$targetLanguageCode"),
+          Uri.parse(
+            "$translateApiUrl?q=${Uri.encodeComponent(textsToTranslate[key]!)}&langpair=en|$targetLanguageCode",
+          ),
         );
         if (response.statusCode == 200) {
-          final translatedText = jsonDecode(response.body)["responseData"]["translatedText"];
+          final translatedText =
+              jsonDecode(response.body)["responseData"]["translatedText"];
           setState(() {
             switch (key) {
               case "titleText":
@@ -225,9 +230,10 @@ class _QuizScreenState extends State<QuizScreen> {
                         child: Text(
                           feedbackText,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.black),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -240,18 +246,27 @@ class _QuizScreenState extends State<QuizScreen> {
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 24),
+                            vertical: 12,
+                            horizontal: 24,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          // Navigation for next question can be added here if available.
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WaterVaporQuiz(),
+                            ),
+                          );
                         },
                         child: Text(nextQuestionText),
                       ),
+
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -313,7 +328,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 }
               }
             },
-          )
+          ),
         ],
       ),
     );
@@ -325,12 +340,11 @@ class _QuizScreenState extends State<QuizScreen> {
       child: Text(text, style: const TextStyle(fontSize: 16)),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        backgroundColor: buttonColor != null && answer.toLowerCase() != 'evaporation'
-            ? buttonColor
-            : Colors.blueAccent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        backgroundColor:
+            buttonColor != null && answer.toLowerCase() != 'evaporation'
+                ? buttonColor
+                : Colors.blueAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
