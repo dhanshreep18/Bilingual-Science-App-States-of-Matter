@@ -76,12 +76,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
               const SizedBox(height: 20),
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  "https://creatie.ai/ai/api/search-image?query=realistic illustration of butter melting process",
-                  width: 300,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
+                child: Image.asset('assets/evaporation.png', fit: BoxFit.cover),
               ),
               const SizedBox(height: 20),
               Wrap(
