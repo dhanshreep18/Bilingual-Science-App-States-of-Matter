@@ -3,10 +3,12 @@ import 'package:confetti/confetti.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+// Make sure this import points to your quiz_question_6.dart
 import 'quiz_question_6.dart';
 
 class WaterVaporQuiz extends StatefulWidget {
-  const WaterVaporQuiz({super.key});
+  WaterVaporQuiz({Key? key}) : super(key: key);
 
   @override
   _WaterVaporQuizState createState() => _WaterVaporQuizState();
@@ -39,6 +41,12 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
     );
   }
 
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
   Future<void> translateText(String targetLanguageCode) async {
     for (String key in translations.keys) {
       try {
@@ -51,8 +59,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
         if (response.statusCode == 200) {
           final decodedResponse = jsonDecode(response.body);
           setState(() {
-            translations[key] =
-                decodedResponse["responseData"]["translatedText"];
+            translations[key] = decodedResponse["responseData"]["translatedText"];
           });
         } else {
           debugPrint("Translation API Error: ${response.body}");
@@ -85,12 +92,6 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
   }
 
   @override
-  void dispose() {
-    _confettiController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
@@ -105,20 +106,19 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
               dropdownColor: Colors.blue.shade300,
               style: const TextStyle(color: Colors.white),
               underline: Container(height: 0),
-              items:
-                  [
-                    {"name": "English", "code": "en"},
-                    {"name": "Spanish", "code": "es"},
-                    {"name": "Afrikaans", "code": "af"},
-                  ].map((lang) {
-                    return DropdownMenuItem<String>(
-                      value: lang["name"],
-                      child: Text(
-                        lang["name"]!,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }).toList(),
+              items: [
+                {"name": "English", "code": "en"},
+                {"name": "Spanish", "code": "es"},
+                {"name": "Afrikaans", "code": "af"},
+              ].map((lang) {
+                return DropdownMenuItem<String>(
+                  value: lang["name"],
+                  child: Text(
+                    lang["name"]!,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              }).toList(),
               onChanged: (String? newLanguage) {
                 if (newLanguage != null) {
                   setState(() {
@@ -136,8 +136,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                       setState(() {
                         translations = {
                           "question": "What state of matter is water vapor? ☁️",
-                          "hint":
-                              "Hint: Think about the steam rising from hot tea! 🍵",
+                          "hint": "Hint: Think about the steam rising from hot tea! 🍵",
                           "Solid": "Solid",
                           "Liquid": "Liquid",
                           "Gas": "Gas",
@@ -162,7 +161,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
             SizedBox(
               height: 180,
               child: Lottie.asset(
-                "assets/vapor.json", // Ensure this image exists in assets
+                "assets/vapor.json",
                 repeat: true,
                 fit: BoxFit.contain,
               ),
@@ -197,39 +196,35 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
 
                   // Answer Buttons
                   Column(
-                    children:
-                        [
-                          translations["Solid"]!,
-                          translations["Liquid"]!,
-                          translations["Gas"]!,
-                        ].map((answer) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    selectedAnswer == answer
-                                        ? (isCorrect
-                                            ? Colors.green
-                                            : Colors.red)
-                                        : Colors.blue.shade300,
-                                minimumSize: const Size(200, 50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              onPressed:
-                                  isAnswered ? null : () => checkAnswer(answer),
-                              child: Text(
-                                answer,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
+                    children: [
+                      translations["Solid"]!,
+                      translations["Liquid"]!,
+                      translations["Gas"]!,
+                    ].map((answer) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: selectedAnswer == answer
+                                ? (isCorrect ? Colors.green : Colors.red)
+                                : Colors.blue.shade300,
+                            minimumSize: const Size(200, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        }).toList(),
+                          ),
+                          onPressed:
+                              isAnswered ? null : () => checkAnswer(answer),
+                          child: Text(
+                            answer,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
 
                   const SizedBox(height: 20),
@@ -280,7 +275,14 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                         if (isCorrect)
                           ElevatedButton(
                             onPressed: () {
-                              // Do nothing for now
+                              // If you want page-5's "correct" button
+                              // to also go to page-6, you can do that here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => QuizQuestion6(),
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.purple,
@@ -311,13 +313,13 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
               ),
             const SizedBox(height: 20),
 
-            // Another "Next ➡️" button that does nothing
+            // Another "Next ➡️" button that always goes to page-6
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const QuizQuestion6(),
+                    builder: (_) => QuizQuestion6(),
                   ),
                 );
               },

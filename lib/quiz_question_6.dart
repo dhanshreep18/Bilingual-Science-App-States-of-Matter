@@ -15,27 +15,21 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
     duration: Duration(seconds: 2),
   );
 
-  // ------------------------------------------------------------------
-  // ADDED TRANSLATION VARIABLES AND FUNCTION
-  // ------------------------------------------------------------------
+  // Translation variables (unchanged)
   String selectedLanguage = "English";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
 
-  // Text that will be translated
   String titleText = "Match the Pairs!";
   String instructionText = "Tap on an image and then on the correct answer";
   String checkButtonText = "Check ✅";
   String resetButtonText = "Reset 🔄";
   String correctDialogTitle = "Correct! 🎉";
   String wrongDialogTitle = "Try Again! ❌";
-  // Labels for the right side
   String gasLabel = "Gas";
   String solidLabel = "Solid";
 
-  // This function translates each of the strings above.
   Future<void> translateText(String targetLanguageCode) async {
     try {
-      // Map each variable name to its English default text
       Map<String, String> textsToTranslate = {
         "titleText": "Match the Pairs!",
         "instructionText": "Tap on an image and then on the correct answer",
@@ -47,7 +41,6 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
         "solidLabel": "Solid",
       };
 
-      // For each text, call the translation API and update state
       for (String key in textsToTranslate.keys) {
         final response = await http.get(
           Uri.parse(
@@ -91,7 +84,6 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
       debugPrint("Translation Error: $e");
     }
   }
-  // ------------------------------------------------------------------
 
   Map<String, String> correctAnswers = {
     "WaterVapor": "Gas",
@@ -171,9 +163,6 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
-      // ------------------------------------------------------------------
-      // ADDED DROPDOWN IN APPBAR ACTIONS
-      // ------------------------------------------------------------------
       appBar: AppBar(
         title: Text(titleText),
         backgroundColor: Colors.blue.shade400,
@@ -199,7 +188,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                 } else if (value == "Afrikaans") {
                   translateText("af");
                 } else {
-                  // Reset to English defaults
+                  // Reset back to original English
                   setState(() {
                     titleText = "Match the Pairs!";
                     instructionText =
@@ -217,22 +206,19 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
           ),
         ],
       ),
-      // ------------------------------------------------------------------
       body: Stack(
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return CustomPaint(
-                size: Size.infinite,
-                painter: LinePainter(
-                  userConnections,
-                  getWidgetPosition(waterVaporKey),
-                  getWidgetPosition(iceCubeKey),
-                  getWidgetPosition(gasKey),
-                  getWidgetPosition(solidKey),
-                ),
-              );
-            },
+          // Remove LayoutBuilder; use Positioned.fill for a definite size:
+          Positioned.fill(
+            child: CustomPaint(
+              painter: LinePainter(
+                userConnections,
+                getWidgetPosition(waterVaporKey),
+                getWidgetPosition(iceCubeKey),
+                getWidgetPosition(gasKey),
+                getWidgetPosition(solidKey),
+              ),
+            ),
           ),
           Center(
             child: Column(
@@ -240,7 +226,10 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
               children: [
                 Text(
                   instructionText,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 30),
                 Row(
@@ -252,7 +241,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                           onTap: () => selectLeft("WaterVapor"),
                           child: Container(
                             key: waterVaporKey,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color:
@@ -275,7 +264,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                           onTap: () => selectLeft("IceCube"),
                           child: Container(
                             key: iceCubeKey,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color:
@@ -302,7 +291,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                           onTap: () => selectRight("Gas"),
                           child: Container(
                             key: gasKey,
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               vertical: 12,
                               horizontal: 20,
                             ),
@@ -318,7 +307,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                             ),
                             child: Text(
                               gasLabel,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -330,7 +319,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                           onTap: () => selectRight("Solid"),
                           child: Container(
                             key: solidKey,
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               vertical: 12,
                               horizontal: 20,
                             ),
@@ -346,7 +335,7 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                             ),
                             child: Text(
                               solidLabel,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -365,14 +354,17 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                       onPressed: checkAnswers,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                           vertical: 12,
                         ),
                       ),
                       child: Text(
                         checkButtonText,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -380,14 +372,17 @@ class _QuizQuestion6State extends State<QuizQuestion6> {
                       onPressed: resetGame,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                           vertical: 12,
                         ),
                       ),
                       child: Text(
                         resetButtonText,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ],
