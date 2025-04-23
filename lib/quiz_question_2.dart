@@ -170,7 +170,7 @@ class _MatchPairGameState extends State<MatchPairGame> {
                 child: Row(
                   children: [
                     const Text(
-                      "2/7", // Corrected question number
+                      "2/8", // Total of 8 questions
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -179,7 +179,7 @@ class _MatchPairGameState extends State<MatchPairGame> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: LinearProgressIndicator(
-                        value: 2/7, // Corrected progress value
+                        value: 2/8, // Correct fraction: 2 out of 8 questions
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                         minHeight: 10,
@@ -208,10 +208,10 @@ class _MatchPairGameState extends State<MatchPairGame> {
                   return Draggable<String>(
                     data: item["name"]!,
                     feedback: Material(
-                      child: Image.asset(item["image"]!, width: 80, height: 80),
+                      child: Image.asset(item["image"]!, width: 160, height: 160),
                     ),
                     childWhenDragging: const SizedBox.shrink(),
-                    child: Image.asset(item["image"]!, width: 80, height: 80),
+                    child: Image.asset(item["image"]!, width: 160, height: 160),
                   );
                 }).toList(),
               ),

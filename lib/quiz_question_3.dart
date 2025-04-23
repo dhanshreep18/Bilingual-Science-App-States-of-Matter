@@ -196,18 +196,19 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                       child: Row(
                         children: [
                           const Text(
-                            "3/7",
+                            "3/8", // Total of 8 questions
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: LinearProgressIndicator(
-                              value: 3/7, // Third question out of 7
-                              backgroundColor: Colors.grey[300],
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+                              value: 3/8, // Correct fraction: 3 out of 8 questions
+                              backgroundColor: Colors.white.withOpacity(0.3),
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                               minHeight: 10,
                               borderRadius: BorderRadius.circular(10),
                             ),

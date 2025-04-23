@@ -187,7 +187,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
             
             // Cute Lottie Ice Cream Animation
             SizedBox(
-              height: 180,
+              height: 300,
               child: Lottie.asset(
                 "assets/ice_cream.json", // Make sure this file is inside assets/
                 repeat: true,

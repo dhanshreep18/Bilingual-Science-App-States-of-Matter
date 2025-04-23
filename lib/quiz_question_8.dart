@@ -186,8 +186,8 @@ class _CondensationQuizState extends State<CondensationQuiz> {
             
             // Cold Glass Image
             Container(
-              height: 200,
-              width: 200,
+              height: 450,
+              width: 450,
               margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

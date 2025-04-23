@@ -175,7 +175,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         child: Row(
                           children: [
                             const Text(
-                              "4/7",
+                              "4/8",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -185,7 +185,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: LinearProgressIndicator(
-                                value: 4/7, // Fourth question out of 7
+                                value: 4/8, // Fourth question out of 8
                                 backgroundColor: Colors.white.withOpacity(0.3),
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                                 minHeight: 10,
@@ -223,8 +223,8 @@ class _QuizScreenState extends State<QuizScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: Image.asset(
                           'assets/evaporation.jpg',
-                          width: 300,
-                          height: 200,
+                          width: 450,
+                          height: 300,
                           fit: BoxFit.cover,
                         ),
                       ),

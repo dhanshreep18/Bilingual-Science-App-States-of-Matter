@@ -178,7 +178,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                 child: Row(
                   children: [
                     const Text(
-                      "5/7",
+                      "5/8",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -187,7 +187,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: LinearProgressIndicator(
-                        value: 5/7, // Fifth question out of 7
+                        value: 5/8, // Fifth question out of 8
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                         minHeight: 10,
@@ -202,7 +202,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
               
               // Animation
               SizedBox(
-                height: 180,
+                height: 300,
                 child: Lottie.asset(
                   "assets/vapor.json",
                   repeat: true,

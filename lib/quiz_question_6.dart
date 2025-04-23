@@ -284,7 +284,7 @@ class _MatchingGameState extends State<MatchingGame> {
                   child: Row(
                     children: [
                       const Text(
-                        "6/7",
+                        "6/8",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -293,7 +293,7 @@ class _MatchingGameState extends State<MatchingGame> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: LinearProgressIndicator(
-                          value: 6/7, // Sixth question out of 7
+                          value: 6/8, // Sixth question out of 8
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                           minHeight: 10,
@@ -336,8 +336,8 @@ class _MatchingGameState extends State<MatchingGame> {
                             ),
                             child: Image.asset(
                               'assets/watervapor.png',
-                              width: 100,
-                              height: 100,
+                              width: 200,
+                              height: 200,
                             ),
                           ),
                         ),
@@ -359,8 +359,8 @@ class _MatchingGameState extends State<MatchingGame> {
                             ),
                             child: Image.asset(
                               'assets/icecube.jpeg',
-                              width: 100,
-                              height: 100,
+                              width: 200,
+                              height: 200,
                             ),
                           ),
                         ),

@@ -152,7 +152,7 @@ class _GasQuizState extends State<GasQuiz> {
                 child: Row(
                   children: [
                     const Text(
-                      "7/7",
+                      "7/8",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _GasQuizState extends State<GasQuiz> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: LinearProgressIndicator(
-                        value: 1.0, // Last question, fully complete
+                        value: 7/8, // Seventh question out of 8
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                         minHeight: 10,
@@ -176,8 +176,8 @@ class _GasQuizState extends State<GasQuiz> {
               
               // Gas Animation
               SizedBox(
-                height: 200,
-                width: 200,
+                height: 450,
+                width: 450,
                 child: Lottie.asset(
                   "assets/gas.json",
                   repeat: true,
