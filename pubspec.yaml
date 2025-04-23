@@ -34,6 +34,7 @@ dependencies:
   rive: ^0.12.3
   http: ^0.13.5
   lottie: ^2.3.0
+  flutter_svg: ^2.0.9
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -76,6 +77,10 @@ flutter:
   - assets/vapor.json
   - assets/watervapor.png
   - assets/gas.json
+  - assets/cold_glass.svg
+  - assets/cold_glass.png
+  - assets/solid.png
+  - assets/states-of-matter.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

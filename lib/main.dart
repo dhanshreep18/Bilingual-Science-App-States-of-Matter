@@ -7,6 +7,7 @@ import 'quiz_question_4.dart';
 import 'quiz_question_5.dart';
 import 'quiz_question_6.dart';
 import 'quiz_question_7.dart';
+import 'quiz_question_8.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ void main() {
 
 // Helper class to manage quiz navigation
 class QuizNavigator {
-  static const int totalQuestions = 7;
+  static const int totalQuestions = 8;
   
   static Widget getQuestionByIndex(int index) {
     switch (index) {
@@ -32,6 +33,8 @@ class QuizNavigator {
         return const MatchingGame();
       case 7:
         return const GasQuiz();
+      case 8:
+        return const CondensationQuiz();
       default:
         return const StatesOfMatterPage();
     }

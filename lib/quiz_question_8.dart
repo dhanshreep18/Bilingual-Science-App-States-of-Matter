@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:lottie/lottie.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'main.dart';
 
-class IceCreamQuiz extends StatefulWidget {
-  const IceCreamQuiz({super.key});
+class CondensationQuiz extends StatefulWidget {
+  const CondensationQuiz({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _IceCreamQuizState createState() => _IceCreamQuizState();
+  _CondensationQuizState createState() => _CondensationQuizState();
 }
 
-class _IceCreamQuizState extends State<IceCreamQuiz> {
+class _CondensationQuizState extends State<CondensationQuiz> {
   String? selectedAnswer;
   bool isCorrect = false;
   bool isAnswered = false;
   late ConfettiController _confettiController;
   String selectedLanguage = "English";
-  String questionText = "What state of matter is ice cream? 🍦";
-  String hintMessage = "Hint: Think about how ice cream melts when left outside! ☀️";
-  String nextButtonText = "Next Question";
+  String questionText = "When you see water droplets form on the outside of a cold glass, what process is happening?";
+  String hintMessage = "Hint: Think about how water vapor in the air changes when it touches a cold surface! 💧";
+  String nextButtonText = "Finish Quiz";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
 
   @override
@@ -65,7 +64,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
     setState(() {
       selectedAnswer = answer;
       isAnswered = true;
-      if (answer == 'Solid') {
+      if (answer == 'Condensation') {
         isCorrect = true;
         _confettiController.play();
       } else {
@@ -82,8 +81,8 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
     });
   }
 
-  void goToNextPage() {
-    QuizNavigator.navigateNext(context, 1);
+  void finishQuiz() {
+    QuizNavigator.returnToHome(context);
   }
 
   @override
@@ -100,7 +99,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            QuizNavigator.returnToHome(context);
+            QuizNavigator.navigateBack(context, 8);
           },
         ),
         title: Row(
@@ -141,9 +140,9 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                       break;
                     default:
                       setState(() {
-                        questionText = "What state of matter is ice cream? 🍦";
-                        hintMessage = "Hint: Think about how ice cream melts when left outside! ☀️";
-                        nextButtonText = "Next Question";
+                        questionText = "When you see water droplets form on the outside of a cold glass, what process is happening?";
+                        hintMessage = "Hint: Think about how water vapor in the air changes when it touches a cold surface! 💧";
+                        nextButtonText = "Finish Quiz";
                       });
                   }
                 }
@@ -163,7 +162,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
               child: Row(
                 children: [
                   const Text(
-                    "1/8",
+                    "8/8",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -172,7 +171,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: LinearProgressIndicator(
-                      value: 1/8, // First question out of 8
+                      value: 1.0, // Last question, fully complete
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                       minHeight: 10,
@@ -185,13 +184,27 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
             
             const SizedBox(height: 10),
             
-            // Cute Lottie Ice Cream Animation
-            SizedBox(
-              height: 180,
-              child: Lottie.asset(
-                "assets/ice_cream.json", // Make sure this file is inside assets/
-                repeat: true,
-                fit: BoxFit.contain,
+            // Cold Glass Image
+            Container(
+              height: 200,
+              width: 200,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  "assets/cold_glass.png",
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
 
@@ -206,7 +219,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 6,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -221,7 +234,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
 
                   // Answer Buttons
                   Column(
-                    children: ['Solid', 'Liquid', 'Gas'].map((answer) {
+                    children: ['Melting', 'Condensation', 'Freezing', 'Evaporation'].map((answer) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: ElevatedButton(
@@ -252,17 +265,17 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                         ? Column(
                             children: [
                               const Text(
-                                "✅ Correct! Ice cream is a **solid** when frozen! 🧊",
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+                                "✅ Correct! When warm, moist air touches the cold glass surface, the water vapor in the air condenses into liquid water droplets.",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 16),
                               ElevatedButton.icon(
-                                onPressed: goToNextPage,
-                                icon: const Icon(Icons.navigate_next),
+                                onPressed: finishQuiz,
+                                icon: const Icon(Icons.check_circle),
                                 label: Text(nextButtonText),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
+                                  backgroundColor: Colors.green,
                                   minimumSize: const Size(double.infinity, 48),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -274,7 +287,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                         : Column(
                             children: [
                               const Text(
-                                "❌ Oops! Ice cream starts as a solid when frozen. Try again!",
+                                "❌ Not quite! Try again to identify the correct process.",
                                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
                                 textAlign: TextAlign.center,
                               ),
@@ -308,4 +321,4 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
       ),
     );
   }
-}
+} 

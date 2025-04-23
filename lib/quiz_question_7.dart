@@ -251,10 +251,10 @@ class _GasQuizState extends State<GasQuiz> {
                                 const SizedBox(height: 16),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    QuizNavigator.returnToHome(context);
+                                    QuizNavigator.navigateNext(context, 7);
                                   },
                                   icon: const Icon(Icons.check_circle),
-                                  label: const Text("Finish Quiz"),
+                                  label: const Text("Next Question"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
                                     minimumSize: const Size(double.infinity, 48),
