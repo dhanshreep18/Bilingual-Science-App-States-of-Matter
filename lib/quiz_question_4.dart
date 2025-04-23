@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'main.dart'; // Import QuizNavigator
 import 'quiz_question_5.dart'; // Add this to import the new page
 
 class QuizScreen extends StatefulWidget {
@@ -162,11 +163,41 @@ class _QuizScreenState extends State<QuizScreen> {
         child: SafeArea(
           child: Stack(
             children: [
-              Center(
+              Align(
+                alignment: Alignment.topCenter,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
                   child: Column(
                     children: [
+                      // Progress indicator
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "4/7",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value: 4/7, // Fourth question out of 7
+                                backgroundColor: Colors.white.withOpacity(0.3),
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+                                minHeight: 10,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 10),
+                      
                       Text(
                         titleText,
                         style: const TextStyle(
@@ -257,12 +288,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WaterVaporQuiz(),
-                            ),
-                          );
+                          QuizNavigator.navigateNext(context, 4);
                         },
                         child: Text(nextQuestionText),
                       ),
@@ -288,6 +314,12 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
       ),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            QuizNavigator.navigateBack(context, 4);
+          },
+        ),
         title: const Text("Water Cycle Quiz"),
         backgroundColor: Colors.blue, // Changed from transparent to blue
         actions: [

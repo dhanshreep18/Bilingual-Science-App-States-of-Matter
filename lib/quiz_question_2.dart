@@ -160,107 +160,135 @@ class _MatchPairGameState extends State<MatchPairGame> {
         backgroundColor: Colors.blue.shade400,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Text(
-              translations["Drag items to their correct category!"]!,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-
-            // Draggable Images
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                {"name": "Rock", "image": "assets/rock.png"},
-                {"name": "Milk", "image": "assets/milk.png"},
-                {"name": "Oxygen", "image": "assets/oxygen.png"}
-              ].map((item) {
-                return Draggable<String>(
-                  data: item["name"]!,
-                  feedback: Material(
-                    child: Image.asset(item["image"]!, width: 80, height: 80),
-                  ),
-                  childWhenDragging: const SizedBox.shrink(),
-                  child: Image.asset(item["image"]!, width: 80, height: 80),
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Drop Zones with Labels
-            Column(
-              children: ["Solid", "Liquid", "Gas"].map((state) {
-                return DragTarget<String>(
-                  onAccept: (item) {
-                    setState(() {
-                      userAnswers[item] = state;
-                    });
-                  },
-                  builder: (context, candidateData, rejectedData) {
-                    return Container(
-                      width: 250,
-                      height: 100,
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // Progress indicator
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0), // Added vertical padding
+                child: Row(
+                  children: [
+                    const Text(
+                      "2/7", // Corrected question number
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: LinearProgressIndicator(
+                        value: 2/7, // Corrected progress value
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+                        minHeight: 10,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blue, width: 2),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            translations[state]!,
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          userAnswers.entries.firstWhere(
-                                    (entry) => entry.value == state,
-                                    orElse: () => const MapEntry("", ""),
-                                  ).key.isNotEmpty
-                              ? Image.asset(
-                                  "assets/${userAnswers.entries.firstWhere((entry) => entry.value == state).key.toLowerCase()}.png",
-                                  width: 50,
-                                  height: 50,
-                                )
-                              : Text(translations["Drop items here!"]!),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10), // Keep some space
+              Text(
+                translations["Drag items to their correct category!"]!,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
 
-            const SizedBox(height: 20),
+              // Draggable Images
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  {"name": "Rock", "image": "assets/rock.png"},
+                  {"name": "Milk", "image": "assets/milk.png"},
+                  {"name": "Oxygen", "image": "assets/oxygen.png"}
+                ].map((item) {
+                  return Draggable<String>(
+                    data: item["name"]!,
+                    feedback: Material(
+                      child: Image.asset(item["image"]!, width: 80, height: 80),
+                    ),
+                    childWhenDragging: const SizedBox.shrink(),
+                    child: Image.asset(item["image"]!, width: 80, height: 80),
+                  );
+                }).toList(),
+              ),
 
-            // Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(onPressed: resetGame, child: Text(translations["Reset 🔄"]!)),
-                ElevatedButton(onPressed: checkAnswers, child: Text(translations["Check ✅"]!)),
-              ],
-            ),
+              const SizedBox(height: 20),
 
-            const SizedBox(height: 20),
+              // Drop Zones with Labels
+              Column(
+                children: ["Solid", "Liquid", "Gas"].map((state) {
+                  return DragTarget<String>(
+                    onAccept: (item) {
+                      setState(() {
+                        userAnswers[item] = state;
+                      });
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return Container(
+                        width: 250,
+                        height: 100,
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue, width: 2),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              translations[state]!,
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            userAnswers.entries.firstWhere(
+                                      (entry) => entry.value == state,
+                                      orElse: () => const MapEntry("", ""),
+                                    ).key.isNotEmpty
+                                ? Image.asset(
+                                    "assets/${userAnswers.entries.firstWhere((entry) => entry.value == state).key.toLowerCase()}.png",
+                                    width: 50,
+                                    height: 50,
+                                  )
+                                : Text(translations["Drop items here!"]!),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
 
-            // New Next Button to navigate to quiz_question_3
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const IdentifyProcessScreen()),
-                );
-              },
-              child: const Text("Next ➡️"),
-            ),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 20),
+
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(onPressed: resetGame, child: Text(translations["Reset 🔄"]!)),
+                  ElevatedButton(onPressed: checkAnswers, child: Text(translations["Check ✅"]!)),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              // New Next Button to navigate to quiz_question_3
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const IdentifyProcessScreen()),
+                  );
+                },
+                child: const Text("Next ➡️"),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

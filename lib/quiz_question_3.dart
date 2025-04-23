@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'main.dart'; // Import main.dart for QuizNavigator
 import 'quiz_question_4.dart'; // Import quiz_question_4 for navigation
 
 class IdentifyProcessScreen extends StatefulWidget {
@@ -132,6 +133,12 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            QuizNavigator.navigateBack(context, 3);
+          },
+        ),
         title: Text(titleText),
         backgroundColor: Colors.blue,
         actions: [
@@ -176,13 +183,41 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
       ),
       body: Stack(
         children: [
-          Center(
+          SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    // Progress indicator
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        children: [
+                          const Text(
+                            "3/7",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: LinearProgressIndicator(
+                              value: 3/7, // Third question out of 7
+                              backgroundColor: Colors.grey[300],
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+                              minHeight: 10,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 10),
+                    
                     Text(
                       titleText,
                       style: TextStyle(
@@ -252,10 +287,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                     // Next button to navigate to quiz_question_4
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const QuizScreen()),
-                        );
+                        QuizNavigator.navigateNext(context, 3);
                       },
                       child: Text(nextButtonText),
                     ),

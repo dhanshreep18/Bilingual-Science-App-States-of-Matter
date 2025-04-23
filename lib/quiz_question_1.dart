@@ -3,7 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'package:lottie/lottie.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'quiz_question_2.dart';
+import 'main.dart';
 
 class IceCreamQuiz extends StatefulWidget {
   const IceCreamQuiz({super.key});
@@ -21,6 +21,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
   String selectedLanguage = "English";
   String questionText = "What state of matter is ice cream? 🍦";
   String hintMessage = "Hint: Think about how ice cream melts when left outside! ☀️";
+  String nextButtonText = "Next Question";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
 
   @override
@@ -32,19 +33,25 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
   Future<void> translateText(String targetLanguageCode) async {
     try {
       final response = await http.get(
-        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent("What state of matter is ice cream? 🍦")}&langpair=en|$targetLanguageCode"),
+        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(questionText)}&langpair=en|$targetLanguageCode"),
       );
 
       final hintResponse = await http.get(
-        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent("Hint: Think about how ice cream melts when left outside! ☀️")}&langpair=en|$targetLanguageCode"),
+        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(hintMessage)}&langpair=en|$targetLanguageCode"),
+      );
+      
+      final nextButtonResponse = await http.get(
+        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(nextButtonText)}&langpair=en|$targetLanguageCode"),
       );
 
-      if (response.statusCode == 200 && hintResponse.statusCode == 200) {
+      if (response.statusCode == 200 && hintResponse.statusCode == 200 && nextButtonResponse.statusCode == 200) {
         final decodedResponse = jsonDecode(response.body);
         final decodedHintResponse = jsonDecode(hintResponse.body);
+        final decodedNextButtonResponse = jsonDecode(nextButtonResponse.body);
         setState(() {
           questionText = decodedResponse["responseData"]["translatedText"];
           hintMessage = decodedHintResponse["responseData"]["translatedText"];
+          nextButtonText = decodedNextButtonResponse["responseData"]["translatedText"];
         });
       } else {
         debugPrint("Translation API Error: ${response.body}");
@@ -76,10 +83,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
   }
 
   void goToNextPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MatchPairGame()), // Navigate to Next Page
-    );
+    QuizNavigator.navigateNext(context, 1);
   }
 
   @override
@@ -93,10 +97,16 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            QuizNavigator.returnToHome(context);
+          },
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Fun Science Quiz! 🍦"),
+            const Text("States of Matter Quiz"),
             DropdownButton<String>(
               value: selectedLanguage,
               icon: const Icon(Icons.language, color: Colors.white),
@@ -133,6 +143,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                       setState(() {
                         questionText = "What state of matter is ice cream? 🍦";
                         hintMessage = "Hint: Think about how ice cream melts when left outside! ☀️";
+                        nextButtonText = "Next Question";
                       });
                   }
                 }
@@ -142,10 +153,38 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
         ),
         backgroundColor: Colors.blue.shade400,
       ),
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            // Progress indicator
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                children: [
+                  const Text(
+                    "1/7",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: 1/7, // First question out of 7
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+                      minHeight: 10,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 10),
+            
             // Cute Lottie Ice Cream Animation
             SizedBox(
               height: 180,
@@ -190,7 +229,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                             backgroundColor: selectedAnswer == answer
                                 ? (isCorrect ? Colors.green : Colors.red)
                                 : Colors.blue.shade300,
-                            minimumSize: const Size(200, 50),
+                            minimumSize: const Size(double.infinity, 50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -210,10 +249,27 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                   // Feedback Message
                   if (isAnswered)
                     isCorrect
-                        ? const Text(
-                            "✅ Correct! Ice cream is a **solid** when frozen! 🧊",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
-                            textAlign: TextAlign.center,
+                        ? Column(
+                            children: [
+                              const Text(
+                                "✅ Correct! Ice cream is a **solid** when frozen! 🧊",
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton.icon(
+                                onPressed: goToNextPage,
+                                icon: const Icon(Icons.navigate_next),
+                                label: Text(nextButtonText),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  minimumSize: const Size(double.infinity, 48),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                         : Column(
                             children: [
@@ -241,23 +297,11 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                 ],
               ),
             ),
-            if (isCorrect)
-              ConfettiWidget(
-                confettiController: _confettiController,
-                blastDirectionality: BlastDirectionality.explosive,
-                shouldLoop: false,
-                colors: [Colors.green, Colors.blue, Colors.purple],
-              ),
-
-            // Next Button
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: goToNextPage,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-              ),
-              child: const Text("Next ➡️", style: TextStyle(color: Colors.white, fontSize: 18)),
+            ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [Colors.green, Colors.blue, Colors.purple, Colors.orange],
             ),
           ],
         ),

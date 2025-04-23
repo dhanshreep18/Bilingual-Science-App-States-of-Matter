@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'quiz_question_1.dart';
+import 'quiz_question_7.dart';
 
 class StatesOfMatterPage extends StatefulWidget {
   const StatesOfMatterPage({super.key});
@@ -16,7 +17,7 @@ class _StatesOfMatterPageState extends State<StatesOfMatterPage> {
   String titleText = "Science Fun";
   String statesOfMatterText = "States of Matter";
   String chapterOverviewText = "Chapter Overview";
-  String chapterDescription = "🌍 Matter exists in three states: 🧊 Solid (fixed shape & volume), 💧 Liquid (takes container’s shape), and ☁️ Gas (fills any space). 🍦 Ice cream melts, just like water turns to steam 🔥 when heated. 🌦️ Water falls as rain 💦, freezes ❄️ in cold, and evaporates ☀️ in heat. These changes help us understand our world! 🌎✨";
+  String chapterDescription = "🌍 Matter exists in three states: 🧊 Solid (fixed shape & volume), 💧 Liquid (takes container's shape), and ☁️ Gas (fills any space). 🍦 Ice cream melts, just like water turns to steam 🔥 when heated. 🌦️ Water falls as rain 💦, freezes ❄️ in cold, and evaporates ☀️ in heat. These changes help us understand our world! 🌎✨";
   String quizButtonText = "Start Chapter Quiz";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
 
@@ -35,7 +36,8 @@ class _StatesOfMatterPageState extends State<StatesOfMatterPage> {
         Uri.parse("$translateApiUrl?q=${Uri.encodeComponent("Start Chapter Quiz")}&langpair=en|$targetLanguageCode"),
       );
 
-      if (response.statusCode == 200 && chapterResponse.statusCode == 200 && descriptionResponse.statusCode == 200 && quizButtonResponse.statusCode == 200) {
+      if (response.statusCode == 200 && chapterResponse.statusCode == 200 && 
+          descriptionResponse.statusCode == 200 && quizButtonResponse.statusCode == 200) {
         setState(() {
           statesOfMatterText = jsonDecode(response.body)["responseData"]["translatedText"];
           chapterOverviewText = jsonDecode(chapterResponse.body)["responseData"]["translatedText"];
@@ -90,7 +92,7 @@ class _StatesOfMatterPageState extends State<StatesOfMatterPage> {
                           setState(() {
                             statesOfMatterText = "States of Matter";
                             chapterOverviewText = "Chapter Overview";
-                            chapterDescription = "In this chapter, we’ll explore the three states of matter: solid, liquid, and gas... This is going to be an exciting journey into the world of matter!";
+                            chapterDescription = "In this chapter, we'll explore the three states of matter: solid, liquid, and gas... This is going to be an exciting journey into the world of matter!";
                             quizButtonText = "Start Chapter Quiz";
                           });
                         }

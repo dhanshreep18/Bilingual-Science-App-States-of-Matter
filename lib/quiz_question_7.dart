@@ -3,73 +3,54 @@ import 'package:confetti/confetti.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-// Make sure this import points to your quiz_question_6.dart
-import 'quiz_question_6.dart';
-import 'quiz_question_4.dart';
 import 'main.dart';
 
-class WaterVaporQuiz extends StatefulWidget {
-  WaterVaporQuiz({Key? key}) : super(key: key);
+class GasQuiz extends StatefulWidget {
+  const GasQuiz({super.key});
 
   @override
-  _WaterVaporQuizState createState() => _WaterVaporQuizState();
+  // ignore: library_private_types_in_public_api
+  _GasQuizState createState() => _GasQuizState();
 }
 
-class _WaterVaporQuizState extends State<WaterVaporQuiz> {
+class _GasQuizState extends State<GasQuiz> {
   String? selectedAnswer;
   bool isCorrect = false;
   bool isAnswered = false;
   late ConfettiController _confettiController;
   String selectedLanguage = "English";
+  String questionText = "Which state of matter expands to fill its container?";
+  String hintMessage = "Hint: Think about how air or steam moves and fills space! 💨";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
-
-  Map<String, String> translations = {
-    "question": "What state of matter is water vapor? ☁️",
-    "hint": "Hint: Think about the steam rising from hot tea! 🍵",
-    "Solid": "Solid",
-    "Liquid": "Liquid",
-    "Gas": "Gas",
-    "Correct": "✅ Correct! Water vapor is a **gas**! ☁️",
-    "Wrong": "❌ Oops! Water vapor is a gas. Try again!",
-    "Try Again": "Try Again 🔄",
-    "Next": "Next Question",
-  };
 
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 2),
-    );
-  }
-
-  @override
-  void dispose() {
-    _confettiController.dispose();
-    super.dispose();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
   }
 
   Future<void> translateText(String targetLanguageCode) async {
-    for (String key in translations.keys) {
-      try {
-        final response = await http.get(
-          Uri.parse(
-            "$translateApiUrl?q=${Uri.encodeComponent(translations[key]!)}&langpair=en|$targetLanguageCode",
-          ),
-        );
+    try {
+      final response = await http.get(
+        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(questionText)}&langpair=en|$targetLanguageCode"),
+      );
 
-        if (response.statusCode == 200) {
-          final decodedResponse = jsonDecode(response.body);
-          setState(() {
-            translations[key] = decodedResponse["responseData"]["translatedText"];
-          });
-        } else {
-          debugPrint("Translation API Error: ${response.body}");
-        }
-      } catch (e) {
-        debugPrint("Translation Error: $e");
+      final hintResponse = await http.get(
+        Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(hintMessage)}&langpair=en|$targetLanguageCode"),
+      );
+
+      if (response.statusCode == 200 && hintResponse.statusCode == 200) {
+        final decodedResponse = jsonDecode(response.body);
+        final decodedHintResponse = jsonDecode(hintResponse.body);
+        setState(() {
+          questionText = decodedResponse["responseData"]["translatedText"];
+          hintMessage = decodedHintResponse["responseData"]["translatedText"];
+        });
+      } else {
+        debugPrint("Translation API Error: ${response.body}");
       }
+    } catch (e) {
+      debugPrint("Translation Error: $e");
     }
   }
 
@@ -77,7 +58,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
     setState(() {
       selectedAnswer = answer;
       isAnswered = true;
-      if (answer == translations["Gas"]) {
+      if (answer == 'Gas') {
         isCorrect = true;
         _confettiController.play();
       } else {
@@ -93,9 +74,11 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
       isCorrect = false;
     });
   }
-  
-  void goToNextPage() {
-    QuizNavigator.navigateNext(context, 5);
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,13 +89,13 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            QuizNavigator.navigateBack(context, 5);
+            QuizNavigator.navigateBack(context, 7);
           },
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Fun Science Quiz! ☁️"),
+            const Text("States of Matter Quiz"),
             DropdownButton<String>(
               value: selectedLanguage,
               icon: const Icon(Icons.language, color: Colors.white),
@@ -122,7 +105,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
               items: [
                 {"name": "English", "code": "en"},
                 {"name": "Spanish", "code": "es"},
-                {"name": "Afrikaans", "code": "af"},
+                {"name": "Afrikaans", "code": "af"}
               ].map((lang) {
                 return DropdownMenuItem<String>(
                   value: lang["name"],
@@ -147,17 +130,8 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                       break;
                     default:
                       setState(() {
-                        translations = {
-                          "question": "What state of matter is water vapor? ☁️",
-                          "hint": "Hint: Think about the steam rising from hot tea! 🍵",
-                          "Solid": "Solid",
-                          "Liquid": "Liquid",
-                          "Gas": "Gas",
-                          "Correct": "✅ Correct! Water vapor is a **gas**! ☁️",
-                          "Wrong": "❌ Oops! Water vapor is a gas. Try again!",
-                          "Try Again": "Try Again 🔄",
-                          "Next": "Next Question",
-                        };
+                        questionText = "Which state of matter expands to fill its container?";
+                        hintMessage = "Hint: Think about how air or steam moves and fills space! 💨";
                       });
                   }
                 }
@@ -178,7 +152,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                 child: Row(
                   children: [
                     const Text(
-                      "5/7",
+                      "7/7",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -187,7 +161,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: LinearProgressIndicator(
-                        value: 5/7, // Fifth question out of 7
+                        value: 1.0, // Last question, fully complete
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                         minHeight: 10,
@@ -200,50 +174,46 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
               
               const SizedBox(height: 10),
               
-              // Animation
+              // Gas Animation
               SizedBox(
-                height: 180,
+                height: 200,
+                width: 200,
                 child: Lottie.asset(
-                  "assets/vapor.json",
+                  "assets/gas.json",
                   repeat: true,
                   fit: BoxFit.contain,
                 ),
               ),
 
+              const SizedBox(height: 20),
+
               // Question Card
               Container(
                 padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.all(16),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 6,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
                     Text(
-                      translations["question"]!,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      questionText,
+                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
 
                     // Answer Buttons
                     Column(
-                      children: [
-                        translations["Solid"]!,
-                        translations["Liquid"]!,
-                        translations["Gas"]!,
-                      ].map((answer) {
+                      children: ['Solid', 'Liquid', 'Gas'].map((answer) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: ElevatedButton(
@@ -273,18 +243,20 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                       isCorrect
                           ? Column(
                               children: [
-                                Text(
-                                  translations["Correct"]!,
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+                                const Text(
+                                  "✅ Correct! Gases expand to fill their containers! 🎈",
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
                                   textAlign: TextAlign.center,
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 16),
                                 ElevatedButton.icon(
-                                  onPressed: goToNextPage,
-                                  icon: const Icon(Icons.navigate_next),
-                                  label: Text(translations["Next"]!),
+                                  onPressed: () {
+                                    QuizNavigator.returnToHome(context);
+                                  },
+                                  icon: const Icon(Icons.check_circle),
+                                  label: const Text("Finish Quiz"),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Colors.green,
                                     minimumSize: const Size(double.infinity, 48),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -295,14 +267,14 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                             )
                           : Column(
                               children: [
-                                Text(
-                                  translations["Wrong"]!,
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                                const Text(
+                                  "❌ Not quite! Try again to find the correct state of matter.",
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  translations["hint"]!,
+                                  hintMessage,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 16),
                                 ),
@@ -312,23 +284,24 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
                                   ),
-                                  child: Text(translations["Try Again"]!, style: const TextStyle(color: Colors.white)),
+                                  child: const Text("Try Again 🔄", style: TextStyle(color: Colors.white)),
                                 ),
                               ],
                             ),
                   ],
                 ),
               ),
-              ConfettiWidget(
-                confettiController: _confettiController,
-                blastDirectionality: BlastDirectionality.explosive,
-                shouldLoop: false,
-                colors: const [Colors.green, Colors.blue, Colors.orange, Colors.pink],
-              ),
+              if (isCorrect)
+                ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  shouldLoop: false,
+                  colors: const [Colors.green, Colors.blue, Colors.purple, Colors.orange],
+                ),
             ],
           ),
         ),
       ),
     );
   }
-}
+} 

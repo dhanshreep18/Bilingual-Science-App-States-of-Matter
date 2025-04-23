@@ -1,0 +1,37 @@
+{
+  "name": "states-of-matter",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhanshreep18/Bilingual-Science-App-States-of-Matter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dhanshreep18/Bilingual-Science-App-States-of-Matter/issues"
+  },
+  "homepage": "https://github.com/dhanshreep18/Bilingual-Science-App-States-of-Matter#readme",
+  "dependencies": {
+    "@react-navigation/native": "^7.1.6",
+    "expo": "^52.0.44",
+    "expo-status-bar": "^2.0.1",
+    "react": "^19.1.0",
+    "react-native": "^0.79.0",
+    "react-native-gesture-handler": "^2.25.0",
+    "react-native-reanimated": "^3.17.3",
+    "react-native-safe-area-context": "^5.3.0",
+    "react-native-screens": "^4.10.0",
+    "react-dom": "18.3.1",
+    "react-native-web": "~0.19.13",
+    "@expo/metro-runtime": "~4.0.1"
+  }
+}

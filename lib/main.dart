@@ -1,8 +1,63 @@
 import 'package:flutter/material.dart';
 import 'states_of_matter_page.dart';
+import 'quiz_question_1.dart';
+import 'quiz_question_2.dart';
+import 'quiz_question_3.dart';
+import 'quiz_question_4.dart';
+import 'quiz_question_5.dart';
+import 'quiz_question_6.dart';
+import 'quiz_question_7.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+// Helper class to manage quiz navigation
+class QuizNavigator {
+  static const int totalQuestions = 7;
+  
+  static Widget getQuestionByIndex(int index) {
+    switch (index) {
+      case 1:
+        return const IceCreamQuiz();
+      case 2:
+        return MatchPairGame();
+      case 3:
+        return const IdentifyProcessScreen();
+      case 4:
+        return const QuizScreen();
+      case 5:
+        return WaterVaporQuiz();
+      case 6:
+        return const MatchingGame();
+      case 7:
+        return const GasQuiz();
+      default:
+        return const StatesOfMatterPage();
+    }
+  }
+  
+  static void navigateToQuestion(BuildContext context, int index) {
+    Navigator.pushReplacement(
+      context, 
+      MaterialPageRoute(builder: (context) => getQuestionByIndex(index))
+    );
+  }
+  
+  static void navigateNext(BuildContext context, int currentIndex) {
+    navigateToQuestion(context, currentIndex + 1);
+  }
+  
+  static void navigateBack(BuildContext context, int currentIndex) {
+    navigateToQuestion(context, currentIndex - 1);
+  }
+  
+  static void returnToHome(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const StatesOfMatterPage()),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
