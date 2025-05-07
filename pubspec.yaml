@@ -77,7 +77,6 @@ flutter:
   - assets/vapor.json
   - assets/watervapor.png
   - assets/gas.json
-  - assets/cold_glass.svg
   - assets/cold_glass.png
   - assets/solid.png
   - assets/states-of-matter.jpg
