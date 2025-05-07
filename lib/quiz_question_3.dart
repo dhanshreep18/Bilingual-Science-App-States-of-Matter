@@ -3,8 +3,11 @@ import 'package:confetti/confetti.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'main.dart'; // Import main.dart for QuizNavigator
-import 'quiz_question_4.dart'; // Import quiz_question_4 for navigation
+import 'main.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:js' as js;
+import 'package:flutter_tts/flutter_tts.dart';
+import 'quiz_question_4.dart';
 
 class IdentifyProcessScreen extends StatefulWidget {
   const IdentifyProcessScreen({super.key});
@@ -15,15 +18,15 @@ class IdentifyProcessScreen extends StatefulWidget {
 
 class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
   late ConfettiController _confettiController;
+  final FlutterTts flutterTts = FlutterTts();
+
   bool showFeedback = false;
   String feedbackMessage = "";
   Color feedbackColor = Colors.transparent;
 
-  // Language translation variables
   String selectedLanguage = "English";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
 
-  // UI texts that can be translated
   String titleText = "Identify the Process";
   String tryAgainText = "Try Again";
   String nextButtonText = "Next ➡️";
@@ -37,19 +40,31 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 2));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
   }
 
   @override
   void dispose() {
     _confettiController.dispose();
+    if (!kIsWeb) flutterTts.stop();
     super.dispose();
+  }
+
+  Future<void> speak(String text) async {
+    if (kIsWeb) {
+      js.context.callMethod('speakText', [text, "en-US"]);
+    } else {
+      await flutterTts.stop();
+      await flutterTts.setLanguage("en-US");
+      await flutterTts.setSpeechRate(0.5);
+      await flutterTts.speak(text);
+    }
   }
 
   Future<void> translateText(String targetLanguageCode) async {
     try {
-      // List of texts to translate with their keys
       Map<String, String> textsToTranslate = {
         "titleText": "Identify the Process",
         "tryAgainText": "Try Again",
@@ -62,13 +77,15 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
         "wrongFeedback": "Wrong! Try again.",
       };
 
-      // Loop through each text and translate
       for (String key in textsToTranslate.keys) {
         final response = await http.get(
-          Uri.parse("$translateApiUrl?q=${Uri.encodeComponent(textsToTranslate[key]!)}&langpair=en|$targetLanguageCode"),
+          Uri.parse(
+            "$translateApiUrl?q=${Uri.encodeComponent(textsToTranslate[key]!)}&langpair=en|$targetLanguageCode",
+          ),
         );
         if (response.statusCode == 200) {
-          final translatedText = jsonDecode(response.body)["responseData"]["translatedText"];
+          final translatedText =
+              jsonDecode(response.body)["responseData"]["translatedText"];
           setState(() {
             switch (key) {
               case "titleText":
@@ -163,7 +180,6 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                 } else if (value == "Afrikaans") {
                   translateText("af");
                 } else {
-                  // Reset to English
                   setState(() {
                     titleText = "Identify the Process";
                     tryAgainText = "Try Again";
@@ -178,19 +194,17 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                 }
               }
             },
-          )
+          ),
         ],
       ),
       body: Stack(
         children: [
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // Progress indicator
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -206,9 +220,11 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: LinearProgressIndicator(
-                              value: 3/8, // Correct fraction: 3 out of 8 questions
-                              backgroundColor: Colors.white.withOpacity(0.3),
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                              value: 3 / 7,
+                              backgroundColor: Colors.grey[300],
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.purple,
+                              ),
                               minHeight: 10,
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -216,12 +232,10 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                         ],
                       ),
                     ),
-                    
                     const SizedBox(height: 10),
-                    
                     Text(
                       titleText,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Pacifico',
@@ -231,17 +245,40 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                     const SizedBox(height: 20),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset('assets/melting.jpg', fit: BoxFit.cover),
+                      child: Image.asset(
+                        'assets/melting.jpg',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Wrap(
                       spacing: 10,
                       runSpacing: 10,
                       children: [
-                        answerButton(answer1, Icons.water_drop, false),
-                        answerButton(answer2, Icons.waves, false),
-                        answerButton(answer3, Icons.science, false),
-                        answerButton(answer4, Icons.thermostat, true),
+                        answerButton(
+                          label: answer1,
+                          originalText: "Condensation",
+                          icon: Icons.water_drop,
+                          isCorrect: false,
+                        ),
+                        answerButton(
+                          label: answer2,
+                          originalText: "Evaporation",
+                          icon: Icons.waves,
+                          isCorrect: false,
+                        ),
+                        answerButton(
+                          label: answer3,
+                          originalText: "Sublimation",
+                          icon: Icons.science,
+                          isCorrect: false,
+                        ),
+                        answerButton(
+                          label: answer4,
+                          originalText: "Melting",
+                          icon: Icons.thermostat,
+                          isCorrect: true,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -260,14 +297,17 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                               feedbackMessage.contains("Correct")
                                   ? Icons.check_circle
                                   : Icons.error,
-                              color: feedbackMessage.contains("Correct")
-                                  ? Colors.green
-                                  : Colors.red,
+                              color:
+                                  feedbackMessage.contains("Correct")
+                                      ? Colors.green
+                                      : Colors.red,
                             ),
                             const SizedBox(width: 8),
                             Text(
                               feedbackMessage,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
@@ -281,11 +321,11 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Next button to navigate to quiz_question_4
                     ElevatedButton(
                       onPressed: () {
                         QuizNavigator.navigateNext(context, 3);
@@ -297,7 +337,6 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
               ),
             ),
           ),
-          // Confetti widget overlaid at the top center of the screen
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -313,9 +352,17 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
     );
   }
 
-  Widget answerButton(String text, IconData icon, bool isCorrect) {
+  Widget answerButton({
+    required String label,
+    required String originalText,
+    required IconData icon,
+    required bool isCorrect,
+  }) {
     return GestureDetector(
-      onTap: () => checkAnswer(isCorrect),
+      onTap: () {
+        speak(originalText); // Always speak in English
+        checkAnswer(isCorrect);
+      },
       child: Container(
         width: 150,
         height: 100,
@@ -324,11 +371,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300, width: 2),
           boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              spreadRadius: 1,
-            ),
+            BoxShadow(color: Colors.black12, blurRadius: 4, spreadRadius: 1),
           ],
         ),
         child: Column(
@@ -336,7 +379,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
           children: [
             Icon(icon, size: 30, color: isCorrect ? Colors.green : Colors.blue),
             const SizedBox(height: 5),
-            Text(text, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
