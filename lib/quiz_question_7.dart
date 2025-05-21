@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'main.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class GasQuiz extends StatefulWidget {
   const GasQuiz({super.key});
@@ -18,6 +19,7 @@ class _GasQuizState extends State<GasQuiz> {
   bool isCorrect = false;
   bool isAnswered = false;
   late ConfettiController _confettiController;
+  final FlutterTts flutterTts = FlutterTts();
   String selectedLanguage = "English";
   String questionText = "Which state of matter expands to fill its container?";
   String hintMessage = "Hint: Think about how air or steam moves and fills space! 💨";
@@ -27,6 +29,13 @@ class _GasQuizState extends State<GasQuiz> {
   void initState() {
     super.initState();
     _confettiController = ConfettiController(duration: const Duration(seconds: 2));
+  }
+
+  Future<void> speak(String text) async {
+    await flutterTts.stop();
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
   }
 
   Future<void> translateText(String targetLanguageCode) async {
@@ -78,6 +87,7 @@ class _GasQuizState extends State<GasQuiz> {
   @override
   void dispose() {
     _confettiController.dispose();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -161,7 +171,7 @@ class _GasQuizState extends State<GasQuiz> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: LinearProgressIndicator(
-                        value: 7/8, // Seventh question out of 8
+                        value: 7/8,
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                         minHeight: 10,
@@ -226,7 +236,10 @@ class _GasQuizState extends State<GasQuiz> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            onPressed: isAnswered ? null : () => checkAnswer(answer),
+                            onPressed: isAnswered ? null : () {
+                              speak(answer);
+                              checkAnswer(answer);
+                            },
                             child: Text(
                               answer,
                               style: const TextStyle(color: Colors.white, fontSize: 18),
