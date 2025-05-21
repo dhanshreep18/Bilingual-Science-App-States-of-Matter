@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'main.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class MatchingGame extends StatefulWidget {
   const MatchingGame({super.key});
@@ -24,6 +25,8 @@ class _MatchingGameState extends State<MatchingGame> {
   
   Map<String, String> userConnections = {};
   late ConfettiController _confettiController;
+  final FlutterTts flutterTts = FlutterTts();
+
   String selectedLanguage = "English";
   String titleText = "Match the Pairs!";
   String instructionText = "Tap on an image and then on the correct answer";
@@ -45,6 +48,7 @@ class _MatchingGameState extends State<MatchingGame> {
   @override
   void dispose() {
     _confettiController.dispose();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -193,6 +197,13 @@ class _MatchingGameState extends State<MatchingGame> {
 
   void goToNextPage() {
     QuizNavigator.navigateNext(context, 6);
+  }
+
+  Future<void> speak(String text) async {
+    await flutterTts.stop();
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
   }
 
   @override
@@ -370,7 +381,10 @@ class _MatchingGameState extends State<MatchingGame> {
                     Column(
                       children: [
                         GestureDetector(
-                          onTap: () => selectRight("Gas"),
+                          onTap: () {
+                            speak("Gas");
+                            selectRight("Gas");
+                          },
                           child: Container(
                             key: gasKey,
                             padding: const EdgeInsets.symmetric(
@@ -398,7 +412,10 @@ class _MatchingGameState extends State<MatchingGame> {
                         ),
                         const SizedBox(height: 40),
                         GestureDetector(
-                          onTap: () => selectRight("Solid"),
+                          onTap: () {
+                            speak("Solid");
+                            selectRight("Solid");
+                          },
                           child: Container(
                             key: solidKey,
                             padding: const EdgeInsets.symmetric(

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'main.dart'; // Import QuizNavigator
 import 'quiz_question_5.dart'; // Add this to import the new page
+import 'package:flutter_tts/flutter_tts.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -35,6 +36,8 @@ class _QuizScreenState extends State<QuizScreen> {
   String correctFeedback = "✅ Correct! You're on fire!";
   String wrongFeedback = "❌ Oops! Try again!";
 
+  final FlutterTts flutterTts = FlutterTts();
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +49,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   void dispose() {
     _confettiController.dispose();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -116,6 +120,13 @@ class _QuizScreenState extends State<QuizScreen> {
     } catch (e) {
       debugPrint("Translation Error: $e");
     }
+  }
+
+  Future<void> speak(String text) async {
+    await flutterTts.stop();
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
   }
 
   void checkAnswer(String answer) {
@@ -367,8 +378,18 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget answerButton(String text, String answer) {
+    final Map<String, String> englishAnswers = {
+      'evaporation': 'Evaporation',
+      'sublimation': 'Sublimation',
+      'condensation': 'Condensation',
+      'freezing': 'Freezing',
+    };
+
     return ElevatedButton(
-      onPressed: () => checkAnswer(answer),
+      onPressed: () {
+        speak(englishAnswers[answer.toLowerCase()] ?? answer);
+        checkAnswer(answer);
+      },
       child: Text(text, style: const TextStyle(fontSize: 16)),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),

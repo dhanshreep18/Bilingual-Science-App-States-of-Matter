@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_tts/flutter_tts.dart';
 
 // Make sure this import points to your quiz_question_6.dart
 import 'quiz_question_6.dart';
@@ -23,6 +24,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
   late ConfettiController _confettiController;
   String selectedLanguage = "English";
   final String translateApiUrl = "https://api.mymemory.translated.net/get";
+  final FlutterTts flutterTts = FlutterTts();
 
   Map<String, String> translations = {
     "question": "What state of matter is water vapor? ☁️",
@@ -47,6 +49,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
   @override
   void dispose() {
     _confettiController.dispose();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -71,6 +74,13 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
         debugPrint("Translation Error: $e");
       }
     }
+  }
+
+  Future<void> speak(String text) async {
+    await flutterTts.stop();
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
   }
 
   void checkAnswer(String answer) {
@@ -100,6 +110,12 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> englishAnswers = {
+      "Solid": "Solid",
+      "Liquid": "Liquid",
+      "Gas": "Gas",
+    };
+
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       appBar: AppBar(
@@ -244,6 +260,11 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                         translations["Liquid"]!,
                         translations["Gas"]!,
                       ].map((answer) {
+                        String englishKey = englishAnswers.entries
+                            .firstWhere((entry) => translations[entry.key] == answer,
+                                orElse: () => const MapEntry("Gas", "Gas"))
+                            .key;
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: ElevatedButton(
@@ -256,7 +277,12 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            onPressed: isAnswered ? null : () => checkAnswer(answer),
+                            onPressed: isAnswered
+                                ? null
+                                : () {
+                                    speak(englishAnswers[englishKey]!);
+                                    checkAnswer(answer);
+                                  },
                             child: Text(
                               answer,
                               style: const TextStyle(color: Colors.white, fontSize: 18),
