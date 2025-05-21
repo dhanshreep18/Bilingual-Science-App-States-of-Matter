@@ -43,6 +43,13 @@ class _MatchingGameState extends State<MatchingGame> {
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
+    
+    // Add a post-frame callback to ensure the UI is built before accessing positions
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        // Just trigger a rebuild to ensure positions are correct
+      });
+    });
   }
 
   @override
@@ -273,15 +280,16 @@ class _MatchingGameState extends State<MatchingGame> {
       ),
       body: Stack(
         children: [
-          // Remove LayoutBuilder; use Positioned.fill for a definite size:
           Positioned.fill(
-            child: CustomPaint(
-              painter: LinePainter(
-                userConnections,
-                getWidgetPosition(waterVaporKey),
-                getWidgetPosition(iceCubeKey),
-                getWidgetPosition(gasKey),
-                getWidgetPosition(solidKey),
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: LinePainter(
+                  userConnections,
+                  getWidgetPosition(waterVaporKey),
+                  getWidgetPosition(iceCubeKey),
+                  getWidgetPosition(gasKey),
+                  getWidgetPosition(solidKey),
+                ),
               ),
             ),
           ),
@@ -330,48 +338,56 @@ class _MatchingGameState extends State<MatchingGame> {
                   children: [
                     Column(
                       children: [
-                        GestureDetector(
-                          onTap: () => selectLeft("WaterVapor"),
-                          child: Container(
-                            key: waterVaporKey,
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color:
-                                    selectedLeft == "WaterVapor"
-                                        ? Colors.blueAccent
-                                        : Colors.transparent,
-                                width: 3,
+                        Container(
+                          key: waterVaporKey,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: GestureDetector(
+                            onTap: () => selectLeft("WaterVapor"),
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      selectedLeft == "WaterVapor"
+                                          ? Colors.blueAccent
+                                          : Colors.transparent,
+                                  width: 3,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Image.asset(
-                              'assets/watervapor.png',
-                              width: 200,
-                              height: 200,
+                              child: Image.asset(
+                                'assets/watervapor.png',
+                                width: 180,
+                                height: 180,
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 40),
-                        GestureDetector(
-                          onTap: () => selectLeft("IceCube"),
-                          child: Container(
-                            key: iceCubeKey,
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color:
-                                    selectedLeft == "IceCube"
-                                        ? Colors.blueAccent
-                                        : Colors.transparent,
-                                width: 3,
+                        Container(
+                          key: iceCubeKey,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: GestureDetector(
+                            onTap: () => selectLeft("IceCube"),
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      selectedLeft == "IceCube"
+                                          ? Colors.blueAccent
+                                          : Colors.transparent,
+                                  width: 3,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Image.asset(
-                              'assets/icecube.jpeg',
-                              width: 200,
-                              height: 200,
+                              child: Image.asset(
+                                'assets/icecube.jpeg',
+                                width: 180,
+                                height: 180,
+                              ),
                             ),
                           ),
                         ),
@@ -380,63 +396,71 @@ class _MatchingGameState extends State<MatchingGame> {
                     const SizedBox(width: 100),
                     Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            speak("Gas");
-                            selectRight("Gas");
-                          },
-                          child: Container(
-                            key: gasKey,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 20,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color:
-                                    userConnections.values.contains("Gas")
-                                        ? Colors.green
-                                        : Colors.grey,
-                                width: 2,
+                        Container(
+                          key: gasKey,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: GestureDetector(
+                            onTap: () {
+                              speak("Gas");
+                              selectRight("Gas");
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 20,
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              gasLabel,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      userConnections.values.contains("Gas")
+                                          ? Colors.green
+                                          : Colors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                gasLabel,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 40),
-                        GestureDetector(
-                          onTap: () {
-                            speak("Solid");
-                            selectRight("Solid");
-                          },
-                          child: Container(
-                            key: solidKey,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 20,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color:
-                                    userConnections.values.contains("Solid")
-                                        ? Colors.green
-                                        : Colors.grey,
-                                width: 2,
+                        Container(
+                          key: solidKey,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: GestureDetector(
+                            onTap: () {
+                              speak("Solid");
+                              selectRight("Solid");
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 20,
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              solidLabel,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      userConnections.values.contains("Solid")
+                                          ? Colors.green
+                                          : Colors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                solidLabel,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -523,8 +547,9 @@ class LinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.green
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
     for (var entry in connections.entries) {
       Offset start = Offset.zero;
@@ -543,7 +568,26 @@ class LinePainter extends CustomPainter {
       }
 
       if (start != Offset.zero && end != Offset.zero) {
-        canvas.drawLine(start, end, paint);
+        // Draw an S-curved line for better appearance
+        final distance = (end.dx - start.dx).abs();
+        final midX = start.dx + (end.dx - start.dx) / 2;
+        
+        final path = Path()
+          ..moveTo(start.dx, start.dy)
+          ..cubicTo(
+            midX - distance / 6, start.dy,
+            midX + distance / 6, end.dy,
+            end.dx, end.dy
+          );
+          
+        canvas.drawPath(path, paint);
+        
+        final dotPaint = Paint()
+          ..color = Colors.blue.shade700
+          ..style = PaintingStyle.fill;
+          
+        canvas.drawCircle(start, 4, dotPaint);
+        canvas.drawCircle(end, 4, dotPaint);
       }
     }
   }
