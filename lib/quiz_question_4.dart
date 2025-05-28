@@ -301,6 +301,10 @@ class _QuizScreenState extends State<QuizScreen> {
                         onPressed: () {
                           QuizNavigator.navigateNext(context, 4);
                         },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue,
+                        ),
                         child: Text(nextQuestionText),
                       ),
 
@@ -393,6 +397,7 @@ class _QuizScreenState extends State<QuizScreen> {
       child: Text(text, style: const TextStyle(fontSize: 16)),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        foregroundColor: Colors.white,
         backgroundColor:
             buttonColor != null && answer.toLowerCase() != 'evaporation'
                 ? buttonColor

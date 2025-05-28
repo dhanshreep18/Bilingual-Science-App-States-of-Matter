@@ -220,7 +220,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: LinearProgressIndicator(
-                              value: 3 / 7,
+                              value: 3 / 8,
                               backgroundColor: Colors.grey[300],
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 Colors.purple,
@@ -330,6 +330,10 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
                       onPressed: () {
                         QuizNavigator.navigateNext(context, 3);
                       },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue,
+                      ),
                       child: Text(nextButtonText),
                     ),
                   ],

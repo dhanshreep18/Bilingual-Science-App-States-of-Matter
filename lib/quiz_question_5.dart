@@ -272,6 +272,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                               backgroundColor: selectedAnswer == answer
                                   ? (isCorrect ? Colors.green : Colors.red)
                                   : Colors.blue.shade300,
+                              foregroundColor: Colors.white,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -311,6 +312,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                                   label: Text(translations["Next"]!),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
                                     minimumSize: const Size(double.infinity, 48),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -337,6 +339,7 @@ class _WaterVaporQuizState extends State<WaterVaporQuiz> {
                                   onPressed: resetQuiz,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
+                                    foregroundColor: Colors.white,
                                   ),
                                   child: Text(translations["Try Again"]!, style: const TextStyle(color: Colors.white)),
                                 ),

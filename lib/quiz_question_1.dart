@@ -196,13 +196,13 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
               child: Row(
                 children: [
                   const Text(
-                    "1/7",
+                    "1/8",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: LinearProgressIndicator(
-                      value: 1 / 7,
+                      value: 1 / 8,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
                       minHeight: 10,
@@ -259,6 +259,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                                             ? Colors.green
                                             : Colors.red)
                                         : Colors.blue.shade300,
+                                foregroundColor: Colors.white,
                                 minimumSize: const Size(double.infinity, 50),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -298,6 +299,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                               label: Text(nextButtonText),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
                                 minimumSize: const Size(double.infinity, 48),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -328,6 +330,7 @@ class _IceCreamQuizState extends State<IceCreamQuiz> {
                               onPressed: resetQuiz,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange,
+                                foregroundColor: Colors.white,
                               ),
                               child: const Text(
                                 "Try Again 🔄",

@@ -477,6 +477,7 @@ class _MatchingGameState extends State<MatchingGame> {
                       onPressed: checkAnswers,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.purple,
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                           vertical: 12,
@@ -495,6 +496,7 @@ class _MatchingGameState extends State<MatchingGame> {
                       onPressed: resetGame,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                           vertical: 12,
@@ -517,6 +519,7 @@ class _MatchingGameState extends State<MatchingGame> {
                   label: Text(nextButtonText),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
                     minimumSize: const Size(200, 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

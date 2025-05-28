@@ -252,6 +252,7 @@ class _CondensationQuizState extends State<CondensationQuiz> {
                             backgroundColor: selectedAnswer == answer
                                 ? (isCorrect ? Colors.green : Colors.red)
                                 : Colors.blue.shade300,
+                            foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -289,6 +290,7 @@ class _CondensationQuizState extends State<CondensationQuiz> {
                                 label: Text(nextButtonText),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
                                   minimumSize: const Size(double.infinity, 48),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -315,6 +317,7 @@ class _CondensationQuizState extends State<CondensationQuiz> {
                                 onPressed: resetQuiz,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.white,
                                 ),
                                 child: const Text("Try Again 🔄", style: TextStyle(color: Colors.white)),
                               ),

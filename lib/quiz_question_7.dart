@@ -231,6 +231,7 @@ class _GasQuizState extends State<GasQuiz> {
                               backgroundColor: selectedAnswer == answer
                                   ? (isCorrect ? Colors.green : Colors.red)
                                   : Colors.blue.shade300,
+                              foregroundColor: Colors.white,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -270,6 +271,7 @@ class _GasQuizState extends State<GasQuiz> {
                                   label: const Text("Next Question"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
                                     minimumSize: const Size(double.infinity, 48),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -296,6 +298,7 @@ class _GasQuizState extends State<GasQuiz> {
                                   onPressed: resetQuiz,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
+                                    foregroundColor: Colors.white,
                                   ),
                                   child: const Text("Try Again 🔄", style: TextStyle(color: Colors.white)),
                                 ),

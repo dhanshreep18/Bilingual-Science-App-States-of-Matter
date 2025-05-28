@@ -269,8 +269,22 @@ class _MatchPairGameState extends State<MatchPairGame> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(onPressed: resetGame, child: Text(translations["Reset 🔄"]!)),
-                  ElevatedButton(onPressed: checkAnswers, child: Text(translations["Check ✅"]!)),
+                  ElevatedButton(
+                    onPressed: resetGame,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.orange,
+                    ),
+                    child: Text(translations["Reset 🔄"]!),
+                  ),
+                  ElevatedButton(
+                    onPressed: checkAnswers,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: Text(translations["Check ✅"]!),
+                  ),
                 ],
               ),
 
@@ -284,6 +298,10 @@ class _MatchPairGameState extends State<MatchPairGame> {
                     MaterialPageRoute(builder: (context) => const IdentifyProcessScreen()),
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.green,
+                ),
                 child: const Text("Next ➡️"),
               ),
               const SizedBox(height: 20),
