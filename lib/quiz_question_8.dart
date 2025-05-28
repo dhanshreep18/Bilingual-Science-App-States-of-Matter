@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'main.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class CondensationQuiz extends StatefulWidget {
   const CondensationQuiz({super.key});
@@ -17,6 +18,7 @@ class _CondensationQuizState extends State<CondensationQuiz> {
   bool isCorrect = false;
   bool isAnswered = false;
   late ConfettiController _confettiController;
+  final FlutterTts flutterTts = FlutterTts();
   String selectedLanguage = "English";
   String questionText = "When you see water droplets form on the outside of a cold glass, what process is happening?";
   String hintMessage = "Hint: Think about how water vapor in the air changes when it touches a cold surface! 💧";
@@ -60,6 +62,13 @@ class _CondensationQuizState extends State<CondensationQuiz> {
     }
   }
 
+  Future<void> speak(String text) async {
+    await flutterTts.stop();
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
+  }
+
   void checkAnswer(String answer) {
     setState(() {
       selectedAnswer = answer;
@@ -88,6 +97,7 @@ class _CondensationQuizState extends State<CondensationQuiz> {
   @override
   void dispose() {
     _confettiController.dispose();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -186,8 +196,8 @@ class _CondensationQuizState extends State<CondensationQuiz> {
             
             // Cold Glass Image
             Container(
-              height: 450,
-              width: 450,
+              height: 400,
+              width: 400,
               margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -247,7 +257,10 @@ class _CondensationQuizState extends State<CondensationQuiz> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: isAnswered ? null : () => checkAnswer(answer),
+                          onPressed: isAnswered ? null : () {
+                            speak(answer);
+                            checkAnswer(answer);
+                          },
                           child: Text(
                             answer,
                             style: const TextStyle(color: Colors.white, fontSize: 18),
