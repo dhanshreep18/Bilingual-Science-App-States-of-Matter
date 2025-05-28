@@ -330,7 +330,7 @@ class _QuizScreenState extends State<QuizScreen> {
       ),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             QuizNavigator.navigateBack(context, 4);
           },

@@ -97,7 +97,7 @@ class _GasQuizState extends State<GasQuiz> {
       backgroundColor: Colors.blue.shade50,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             QuizNavigator.navigateBack(context, 7);
           },

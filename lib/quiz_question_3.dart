@@ -151,7 +151,7 @@ class _IdentifyProcessScreenState extends State<IdentifyProcessScreen> {
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             QuizNavigator.navigateBack(context, 3);
           },

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'quiz_question_3.dart'; // Added to navigate to quiz_question_3
+import 'quiz_question_3.dart';
+import 'main.dart';
 
 class MatchPairGame extends StatefulWidget {
   const MatchPairGame({super.key});
@@ -158,6 +159,12 @@ class _MatchPairGameState extends State<MatchPairGame> {
           ],
         ),
         backgroundColor: Colors.blue.shade400,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            QuizNavigator.navigateBack(context, 2);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
